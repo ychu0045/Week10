@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--Google font-->
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Roboto:wght@900&display=swap"
+        rel="stylesheet">
+    <!--Pure-->
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css"
+        integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ" crossorigin="anonymous">
+    <!--CSS file-->
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+    <title>FIT3179 Homework Week 10</title>
+</head>
+
+<body>
+    <div class="page">
+        <div class="pure-g">
+            <div class="pure-u-1-1">
+                <h1>FIT3179 Homework Week 10</h1>
+                <p>Name: Chua Yan Yan</p>
+                <p>Student ID: 31947239</p>
+                <p>Lab: 02 (Friday 9am)</p>
+                <p>Tutor: Dr. Grace Ting</p>
+            </div>
+        </div>
+        <div class="pure-g">
+            <div class="pure-u-1-1">
+                <div class="description">
+                    <p>Visualisation 1: A choropleth map that I created in the week 9 homework.</p>
+                </div>
+            </div>
+            <div class="pure-u-1-1">
+                <div id="map" class="vis-container"></div>
+            </div>
+        </div>
+        <div class="pure-g">
+            <div class="pure-u-1-1">
+                <div class="description">
+                    <p>Visualisation 2: A waterfall chart that I created in this week homework.</p>
+                </div>
+            </div>
+            <div class="pure-u-1-1">
+                <div id="chart" class="vis-container"></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var vgmap = "js/w9.json";
+        var vgchart = "js/w10.json";
+        vegaEmbed("#map", vgmap).then(function (result) { }).catch(console.error);
+        vegaEmbed("#chart", vgchart).then(function (result) { }).catch(console.error);
+    </script>
+</body>
+
+</html>
