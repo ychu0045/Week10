@@ -1,0 +1,196 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "Covid-19 New Cases in East Malaysia from January to August 2021",
+    "width": 800,
+    "height": 600,
+    "data": {
+        "url": "https://raw.githubusercontent.com/ychu0045/Week10/main/data/cases_eastmsia_2021.csv"
+    },
+    "params": [
+        {
+            "name": "State_selection",
+            "bind": {
+                "input": "select",
+                "options": [
+                    null,
+                    "Sabah",
+                    "Sarawak"
+                ],
+                "labels": [
+                    "East Malaysia",
+                    "Sabah",
+                    "Sarawak"
+                ],
+                "name": "State selection: "
+            }
+        }
+    ],
+    "transform": [
+        {
+            "filter": "(State_selection == null && datum.state == 'East Malaysia') || datum.state == State_selection"
+        },
+        {
+            "window": [
+                {
+                    "op": "sum",
+                    "field": "difference",
+                    "as": "sum"
+                }
+            ]
+        },
+        {
+            "window": [
+                {
+                    "op": "lead",
+                    "field": "date",
+                    "as": "lead"
+                }
+            ]
+        },
+        {
+            "calculate": "datum.lead === null ? datum.date : datum.lead",
+            "as": "lead"
+        },
+        {
+            "calculate": "datum.date === 'End' ? 0 : datum.sum - datum.difference",
+            "as": "previous_sum"
+        },
+        {
+            "calculate": "datum.sum < datum.previous_sum ? datum.sum : ''",
+            "as": "sum_dec"
+        },
+        {
+            "calculate": "datum.sum > datum.previous_sum ? datum.sum : ''",
+            "as": "sum_inc"
+        }
+    ],
+    "encoding": {
+        "x": {
+            "field": "date",
+            "type": "nominal",
+            "title": "Date"
+        },
+        "tooltip": [
+            {
+                "field": "date",
+                "type": "nominal",
+                "title": "Week of"
+            },
+            {
+                "field": "cases_new",
+                "type": "quantitative",
+                "title": "New cases"
+            },
+            {
+                "field": "difference",
+                "type": "quantitative",
+                "title": "Increase by"
+            }
+        ]
+    },
+    "layer": [
+        {
+            "mark": {
+                "type": "bar"
+            },
+            "encoding": {
+                "y": {
+                    "field": "previous_sum",
+                    "type": "quantitative",
+                    "title": "New Cases"
+                },
+                "y2": {
+                    "field": "sum"
+                },
+                "color": {
+                    "condition": [
+                        {
+                            "test": "datum.date === '2021-01-01' || datum.date === 'End'",
+                            "value": "#ffffb3"
+                        },
+                        {
+                            "test": "datum.sum < datum.previous_sum",
+                            "value": "#b3de69"
+                        }
+                    ],
+                    "value": "#fb8072"
+                }
+            }
+        },
+        {
+            "mark": {
+                "type": "rule",
+                "color": "#404040",
+                "opacity": 1,
+                "strokeWidth": 1,
+                "xOffset": -10,
+                "x2Offset": 10
+            },
+            "encoding": {
+                "x2": {
+                    "field": "lead"
+                },
+                "y": {
+                    "field": "sum",
+                    "type": "quantitative"
+                }
+            }
+        },
+        {
+            "mark": {
+                "type": "text",
+                "dy": -2,
+                "baseline": "bottom",
+                "fontSize": 6
+            },
+            "encoding": {
+                "y": {
+                    "field": "sum_inc",
+                    "type": "quantitative"
+                },
+                "text": {
+                    "condition": [
+                        {
+                            "test": "datum.date === 'End'",
+                            "field": "sum_inc"
+                        },
+                        {
+                            "test": "datum.difference < 0",
+                            "value": ""
+                        }
+                    ],
+                    "field": "difference",
+                    "type": "nominal"
+                }
+            }
+        },
+        {
+            "mark": {
+                "type": "text",
+                "dy": 2,
+                "baseline": "top",
+                "fontSize": 6
+            },
+            "encoding": {
+                "y": {
+                    "field": "sum_dec",
+                    "type": "quantitative"
+                },
+                "text": {
+                    "condition": {
+                        "test": "datum.difference >= 0",
+                        "value": ""
+                    },
+                    "field": "difference",
+                    "type": "nominal"
+                }
+            }
+        }
+    ],
+    "config": {
+        "text": {
+            "fontWeight": "bold",
+            "color": "#404040"
+        }
+    }
+}
